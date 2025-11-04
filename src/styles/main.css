@@ -189,3 +189,42 @@ ul ul {
   background: var(--accent);
   color: var(--background);
 }
+
+/* Section titles for index page */
+.section-title {
+  position: relative;
+  color: var(--accent);
+  font-size: 1.8em;
+  margin-top: 0;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 3px ridge var(--accent);
+  text-decoration: none;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  display: block;
+  width: 100%;
+  border-bottom: 3px ridge var(--accent);
+}
+
+/* Latest sections styling */
+.latest-labs,
+.latest-posts {
+  margin-bottom: 3rem;
+}
+
+.view-all-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.view-all-link:hover {
+  text-decoration: underline;
+}

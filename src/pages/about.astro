@@ -2,29 +2,43 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="About">
+<BaseLayout title="About Me - d4str3k">
   <div class="page">
-    <h1>About</h1>
+    <h1>About me</h1>
     <p>
-      This is the Astro Terminal theme, a port of the fantastic
-      <a href="https://github.com/panr/hugo-theme-terminal" target="_blank" rel="noopener">Hugo Terminal theme</a>
-      created by <a href="https://github.com/panr" target="_blank" rel="noopener">panr</a>.
+      I am a Computer Engineering student at the University of Malaga with a strong interest in the field of cybersecurity. I am eager to expand my knowledge and experience in this area, especially in the development of secure architectures.
     </p>
     
     <p>
-      The Astro version maintains all the great features of the original theme whilst using Astro's modern 
-      static site generation capabilities.
+      I am currently preparing myself to get the OSCP and the BSCP certification.
     </p>
     
     <p>
-      The theme features syntax highlighting with Shiki, customisable colour schemes via
-      <a href="https://panr.github.io/terminal-css/" target="_blank" rel="noopener">Terminal.css</a>,
-      Fira Code monospace font, and a beautiful retro terminal aesthetic.
+      My current projects include <strong>VulnZoo</strong>, a platform for labs focused on risks present in embedded devices, and <strong>SmartFrame</strong>, a personal project aimed at creating a digital photo frame.
     </p>
-    
+
     <p>
-      Ported to Astro by <a href="https://github.com/dennisklappe" target="_blank" rel="noopener">Dennis Klappe</a>.
+      I will be working on my project, which involves using a neural network to identify ransomware and non-malicious applications by analysing patterns in LBA access.
     </p>
+        <div class="profile-links">
+      <a href="https://www.linkedin.com/in/maximo-garcia-aroca/" target="_blank" rel="noopener" class="profile-link linkedin">
+        <img src="/linkedin.svg" alt="LinkedIn" />
+        LinkedIn
+      </a>
+      <a href="https://github.com/d4str3k" target="_blank" rel="noopener" class="profile-link github">
+        <img src="/github.svg" alt="GitHub" />
+        GitHub
+      </a>
+      <span class="profile-link tryhackme">
+        <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=216822" style="border:none;height:40px;"></iframe>
+      </span>
+    </div>
+
+    <p style="margin-top:2em;">
+      Search <strong>d4str3k</strong> user on 
+      <a href="https://www.hackthebox.com/" target="_blank" rel="noopener">Hack The Box</a>
+    </p>
+  </div>
   </div>
 </BaseLayout>
 
@@ -32,5 +46,63 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .page {
     max-width: 760px;
     margin: 0 auto;
+    text-align: justify;
+  }
+    .profile-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin: 2em 0 1em 0;
+    flex-wrap: wrap;
+  }
+
+  .profile-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-weight: bold;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 1.1em;
+    background: #232323;
+    padding: 0.5em 1em;
+    border-radius: 8px;
+    transition: background 0.2s;
+    min-width: 0;
+    overflow: visible;
+  }
+
+.profile-link img {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  min-width: 48px;
+  min-height: 48px;
+  max-width: 48px;
+  max-height: 48px;
+  object-fit: contain;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+  .profile-link:hover {
+    background: var(--accent);
+    color: #181818;
+  }
+  .profile-link.tryhackme {
+    padding: 0;
+    width: auto;
+    background: none;
+    display: flex;
+    align-items: center;
+  }
+  .profile-link.tryhackme iframe {
+    vertical-align: middle;
+    width: 350px;
+    height: 80px;
+    border: none;
+    overflow: visible;
+    display: block;
   }
 </style>

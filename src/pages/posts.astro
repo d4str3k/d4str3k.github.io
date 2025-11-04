@@ -1,0 +1,24 @@
+---
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts'))
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="Posts">
+  <div class="posts-content framed">
+    <h1>Blog Posts</h1>
+    <p>Here you will find my latest blog posts.</p>
+  </div>
+
+  <div class="posts">
+    {posts.map((post) => {
+      const slug = post.id.replace(/^posts\//, '').replace(/\.md$/, '');
+      return <PostCard post={{ slug, data: post.data }} />;
+    })}
+  </div>
+</BaseLayout>

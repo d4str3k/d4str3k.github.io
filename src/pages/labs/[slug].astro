@@ -1,0 +1,27 @@
+---
+import { getCollection, getEntryBySlug } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const labs = await getCollection('labs');
+  return labs.map(lab => ({
+    params: { slug: lab.id.replace(/^labs\//, '').replace(/\.md$/, '') }
+  }));
+}
+
+const { slug } = Astro.params;
+const lab = await getEntryBySlug('labs', slug);
+
+if (!lab) {
+  throw new Error(`Lab not found for slug: ${slug}`);
+}
+
+const { Content } = await lab.render();
+---
+
+<BaseLayout title={lab.data.title}>
+  <article class="lab-article">
+    <h1>{lab.data.title}</h1>
+    <Content />
+  </article>
+</BaseLayout>

@@ -1,0 +1,24 @@
+---
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LabCard from '../components/LabCard.astro';
+import { getCollection } from 'astro:content';
+
+const labs = (await getCollection('labs'))
+  .filter(lab => !lab.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="Labs - Pentesting Labs">
+  <div class="labs-content framed">
+    <h1>Pentesting Labs</h1>
+    <p>Here you will find my write-ups and notes for various pentesting labs and challenges.</p>
+</div>
+
+<div class="labs">
+  {labs.map((lab) => {
+    const slug = lab.id.replace(/^labs\//, '').replace(/\.md$/, '');
+    return <LabCard lab={{ slug, data: lab.data }} />;
+  })}
+</div>
+</BaseLayout>
