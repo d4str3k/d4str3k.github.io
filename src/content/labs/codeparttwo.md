@@ -1,7 +1,7 @@
 ---
 title: "CodePartTwo"
-summary: "Laboratorio de hacking web de HackTheBox"
-pubDate: 2025-01-15
+summary: "HTB CodePartTwo Writeup"
+pubDate: 2025-11-29
 draft: false
 ---
 
