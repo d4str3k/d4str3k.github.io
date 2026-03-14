@@ -15,4 +15,18 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { posts };
+const labs = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    summary: z.string().optional(),
+    pubDate: z.coerce.date(),
+    author: z.string().optional(),
+    image: z.string().optional(),
+    externalLink: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { posts, labs };
