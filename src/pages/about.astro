@@ -6,19 +6,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <div class="page">
     <h1>About me</h1>
     <p>
-      I am a Computer Engineering student at the University of Malaga with a strong interest in the field of cybersecurity. I am eager to expand my knowledge and experience in this area, especially in the development of secure architectures.
-    </p>
-    
-    <p>
-      I am currently preparing myself to get the OSCP and the BSCP certification.
-    </p>
-    
-    <p>
-      My current projects include <strong>VulnZoo</strong>, a platform for labs focused on risks present in embedded devices, and <strong>SmartFrame</strong>, a personal project aimed at creating a digital photo frame.
+      I am a Cybersecurity Evaluator and Security Researcher focused on product security, penetration testing and vulnerability assessment, with hands-on experience across mobile, IoT, embedded and web/API environments.
     </p>
 
     <p>
-      I will be working on my project, which involves using a neural network to identify ransomware and non-malicious applications by analysing patterns in LBA access.
+      In my current role, I perform security evaluations of commercial products and contribute to cybersecurity certification projects, including mobile security assessments and evaluations against industry standards such as ISO/IEC 60601-4-5.
+    </p>
+
+    <p>
+      I am particularly interested in offensive security, vulnerability research and security testing of embedded and mobile systems. I have worked on the development of vulnerable training platforms such as <strong>VulnMNO</strong> and <strong>VulnZoo</strong>.
+    </p>
+
+    <p>
+      My technical interests include Android security, IoT and embedded security, Web/API security, networking, Linux and low-level programming with C/C++, as well as Python-based security tooling.
     </p>
         <div class="profile-links">
       <a href="https://www.linkedin.com/in/maximo-garcia-aroca/" target="_blank" rel="noopener" class="profile-link linkedin">
@@ -35,9 +35,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
 
     <p style="margin-top:2em;">
-      Search <strong>d4str3k</strong> user on 
+      Search <strong>d4str3k</strong> user on
       <a href="https://www.hackthebox.com/" target="_blank" rel="noopener">Hack The Box</a>
     </p>
+
+    <h2 style="margin-top:2em;">CVE</h2>
+    <div class="cv-actions">
+      <a href="/cv/CVE.pdf" target="_blank" rel="noopener" class="profile-link">Open in new tab</a>
+      <a href="/cv/CVE.pdf" download class="profile-link">Download PDF</a>
+    </div>
+    <object data="/cv/CVE.pdf" type="application/pdf" class="cv-viewer">
+      <p>Your browser can't display the PDF inline. <a href="/cv/CVE.pdf">Download it here</a>.</p>
+    </object>
   </div>
   </div>
 </BaseLayout>
@@ -104,5 +113,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border: none;
     overflow: visible;
     display: block;
+  }
+  .cv-actions {
+    display: flex;
+    gap: 1rem;
+    margin: 1em 0;
+    flex-wrap: wrap;
+  }
+  .cv-viewer {
+    width: 100%;
+    height: 80vh;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
   }
 </style>
