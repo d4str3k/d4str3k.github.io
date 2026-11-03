@@ -2,9 +2,9 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const allPosts = await getCollection('posts');
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
 const tags = [...new Set(allPosts.map(post => post.data.tags).flat())];
-const tagCounts = {};
+const tagCounts: Record<string, number> = {};
 
 // Count posts per tag
 allPosts.forEach(post => {
@@ -22,6 +22,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
   <div class="page">
     <h1 class="posts-title">Tags</h1>
     
+    {sortedTags.length === 0 && <p>No tags yet. <a href={`${base}posts/`}>Browse all posts →</a></p>}
     <div class="tags-list">
       {sortedTags.map(tag => (
         <a href={`${base}tags/${tag}/`} class="tag-item">

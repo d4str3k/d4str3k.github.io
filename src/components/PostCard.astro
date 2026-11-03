@@ -11,6 +11,8 @@ export interface Props {
       author?: string;
       tags?: string[];
       image?: string;
+      imageWidth?: number;
+      imageHeight?: number;
       externalLink?: string;
     };
   };
@@ -29,25 +31,25 @@ const isExternal = !!post.data.externalLink;
     </a>
   </h2>
   <div class="post-meta">
-    <time class="post-date">
+    <span class="post-date">
       <FormattedDate date={post.data.pubDate} />
-    </time>
+    </span>
     {post.data.author && (
       <span class="post-author">{post.data.author}</span>
     )}
   </div>
   {post.data.tags && post.data.tags.length > 0 && (
     <span class="post-tags">
-      {post.data.tags.map((tag, index) => (
+      {post.data.tags.map((tag) => (
         <>
-          <a href={`${base}tags/${tag}/`}>{tag}</a>{index < post.data.tags.length - 1 && ', '}
+          <a href={`${base}tags/${tag}/`}>{tag}</a>
         </>
       ))}
     </span>
   )}
   {post.data.image && (
     <figure class="post-cover">
-      <img src={post.data.image} alt={post.data.title} />
+      <img src={post.data.image} alt={post.data.title} width={post.data.imageWidth} height={post.data.imageHeight} loading="lazy" decoding="async" />
     </figure>
   )}
   {post.data.description && (

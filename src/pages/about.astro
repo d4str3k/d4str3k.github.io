@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="About Me - d4str3k">
+<BaseLayout title="About Me - d4str3k" description="Cybersecurity evaluator and security researcher working on product security, Android, IoT, embedded systems and Web/API assessments.">
   <div class="page">
     <h1>About me</h1>
     <p>
@@ -22,15 +22,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </p>
         <div class="profile-links">
       <a href="https://www.linkedin.com/in/maximo-garcia-aroca/" target="_blank" rel="noopener" class="profile-link linkedin">
-        <img src="/linkedin.svg" alt="LinkedIn" />
+        <img src="/linkedin.svg" alt="" width="48" height="48" />
         LinkedIn
       </a>
       <a href="https://github.com/d4str3k" target="_blank" rel="noopener" class="profile-link github">
-        <img src="/github.svg" alt="GitHub" />
+        <img src="/github.svg" alt="" width="48" height="48" />
         GitHub
       </a>
       <span class="profile-link tryhackme">
-        <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=216822" style="border:none;height:40px;"></iframe>
+        <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=216822" title="d4str3k on TryHackMe" loading="lazy"></iframe>
       </span>
     </div>
 
@@ -48,14 +48,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <p>Your browser can't display the PDF inline. <a href="/cv/CVE.pdf">Download it here</a>.</p>
     </object>
   </div>
-  </div>
 </BaseLayout>
 
 <style>
   .page {
     max-width: 760px;
     margin: 0 auto;
-    text-align: justify;
+    text-align: left;
+    width: 100%;
   }
     .profile-links {
     display: flex;
@@ -101,14 +101,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
   .profile-link.tryhackme {
     padding: 0;
-    width: auto;
+    width: min(350px, 100%);
     background: none;
     display: flex;
     align-items: center;
   }
   .profile-link.tryhackme iframe {
     vertical-align: middle;
-    width: 350px;
+    width: 100%;
+    max-width: 350px;
     height: 80px;
     border: none;
     overflow: visible;

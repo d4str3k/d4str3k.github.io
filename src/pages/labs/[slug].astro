@@ -1,27 +1,36 @@
 ---
-import { getCollection, getEntryBySlug } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import CodeTools from '../../components/CodeTools.astro';
 
 export async function getStaticPaths() {
-  const labs = await getCollection('labs');
-  return labs.map(lab => ({
-    params: { slug: lab.id.replace(/^labs\//, '').replace(/\.md$/, '') }
-  }));
+  const labs = await getCollection('labs', ({ data }) => !data.draft);
+  return labs.map(lab => ({ params: { slug: lab.id }, props: { lab } }));
 }
-
-const { slug } = Astro.params;
-const lab = await getEntryBySlug('labs', slug);
-
-if (!lab) {
-  throw new Error(`Lab not found for slug: ${slug}`);
-}
-
-const { Content } = await lab.render();
+interface Props { lab: CollectionEntry<'labs'> }
+const { lab } = Astro.props;
+const { Content, headings } = await render(lab);
+const sections = headings.filter(heading => heading.depth === 2);
+const isSpanish = lab.data.lang === 'es';
 ---
 
-<BaseLayout title={lab.data.title}>
-  <article class="lab-article">
+<BaseLayout title={`${lab.data.title} - Pentesting Write-up - d4str3k`} description={lab.data.summary}>
+  <article class="lab-article" lang={lab.data.lang}>
     <h1>{lab.data.title}</h1>
-    <Content />
+    <div class="post-meta"><FormattedDate date={lab.data.pubDate} /></div>
+    <p class="lab-summary">{lab.data.summary}</p>
+    <dl class="lab-facts">
+      <div><dt>{isSpanish ? 'Dificultad' : 'Difficulty'}</dt><dd>{lab.data.difficulty === 'Not rated' ? (isSpanish ? 'No especificada' : 'Not specified') : lab.data.difficulty}{lab.data.difficultySource && <> · <a href={lab.data.difficultySource}>Hack The Box</a></>}</dd></div>
+      <div><dt>{isSpanish ? 'Técnicas' : 'Techniques'}</dt><dd>{lab.data.techniques.join(' · ')}</dd></div>
+    </dl>
+    {sections.length > 0 && (
+      <nav class="lab-toc" aria-label={isSpanish ? 'Índice del artículo' : 'Article contents'}>
+        <h2>{isSpanish ? 'Índice' : 'Contents'}</h2>
+        <ol>{sections.map(section => <li><a href={`#${section.slug}`}>{section.text}</a></li>)}</ol>
+      </nav>
+    )}
+    <div class="post-content"><Content /></div>
   </article>
+  <CodeTools />
 </BaseLayout>

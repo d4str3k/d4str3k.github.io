@@ -228,3 +228,26 @@ ul ul {
 .view-all-link:hover {
   text-decoration: underline;
 }
+/* Keyboard navigation and readable, responsive content. */
+.skip-link { position: absolute; top: 8px; left: 8px; padding: 10px; background: var(--background); z-index: 100; transform: translateY(-160%); }
+.skip-link:focus { transform: translateY(0); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.action-links { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 1.5rem; margin-top: 1.5rem; }
+.eyebrow { color: var(--accent); font-size: .9rem; }
+.featured-project { padding: 0 0 2.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--code-border); }
+.content, .content > *, .lab-article, .post-content { min-width: 0; }
+.lab-article { width: 100%; max-width: 80ch; margin-inline: auto; }
+.lab-summary { font-size: 1.1rem; }
+.lab-facts { margin: 1.5rem 0; }
+.lab-facts > div { margin-bottom: .75rem; }
+.lab-facts dt { color: var(--accent); font-weight: 600; }
+.lab-facts dd { margin: .25rem 0 0; }
+.lab-toc { padding: 1rem 1.5rem; border: 1px solid var(--code-border); margin: 2rem 0; }
+.lab-toc h2 { margin-top: 0; }
+.lab-toc ol { margin-bottom: 0; }
+.lab-toc li { margin: .5rem 0; }
+h1, h2, h3, p, dd, a { overflow-wrap: anywhere; }
+h2, h3 { scroll-margin-top: 1.5rem; }
+img[width][height] { height: auto; }
+pre { max-width: 100%; overflow-x: auto; }
+.highlight pre { margin: 0; }

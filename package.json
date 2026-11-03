@@ -1,33 +1,39 @@
 {
-  "name": "astro-theme-terminal",
+  "name": "d4str3k-portfolio",
   "type": "module",
   "version": "1.0.0",
-  "description": "A terminal-inspired theme for Astro, ported from Hugo Terminal Theme by panr",
+  "description": "Product security projects, vulnerability research and pentesting write-ups by d4str3k.",
   "license": "MIT",
-  "author": "Dennis Klappe",
+  "author": "d4str3k",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dennisklappe/astro-theme-terminal"
+    "url": "https://github.com/d4str3k/d4str3k.github.io"
   },
   "keywords": [
     "astro",
-    "theme",
-    "terminal",
-    "blog",
-    "monospace",
-    "retro"
+    "portfolio",
+    "cybersecurity",
+    "product-security",
+    "pentesting"
   ],
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check",
+    "test:drafts": "node scripts/test-drafts.mjs"
   },
   "dependencies": {
-    "astro": "^5.16.4"
+    "astro": "^7.4.5"
   },
   "devDependencies": {
-    "@astrojs/rss": "^4.0.11",
-    "@astrojs/sitemap": "^3.2.2"
+    "@astrojs/check": "^0.9.12",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=22.23.4"
   }
 }

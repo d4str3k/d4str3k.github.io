@@ -3,10 +3,12 @@ export interface Props {
   title: string;
   description?: string;
   image?: string;
+  noindex?: boolean;
 }
 
-const { title, description = 'A terminal-inspired Astro theme', image } = Astro.props;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const { title, description = 'Product security, vulnerability research and pentesting projects by d4str3k.', image, noindex = false } = Astro.props;
+const canonicalPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const canonicalURL = new URL(canonicalPath, Astro.site);
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 ---
 
@@ -17,19 +19,20 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <link rel="alternate icon" type="image/x-icon" href={`${base}favicon.ico`} />
+    <meta name="robots" content={noindex ? "noindex, follow" : "index, follow"} />
     <meta name="generator" content={Astro.generator} />
     
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
+    {!noindex && <link rel="canonical" href={canonicalURL} />}
     
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalURL} />
+    {!noindex && <meta property="og:url" content={canonicalURL} />}
     {image && <meta property="og:image" content={new URL(image, Astro.url)} />}
     
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     {image && <meta name="twitter:image" content={new URL(image, Astro.url)} />}
@@ -38,6 +41,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     <link rel="alternate" type="application/rss+xml" title="RSS" href={`${base}rss.xml`} />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="container center">
       <header class="header">
         <div class="header__inner">
@@ -48,20 +52,20 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
               </div>
             </a>
           </div>
-          <ul class="menu menu--mobile">
-            <li class="menu__trigger">Menu ▾</li>
-            <li>
-              <ul class="menu__dropdown">
-                <li><a href={`${base}about/`}>About me</a></li>
-                <li><a href={`${base}labs/`}>Labs</a></li>
-                <li><a href={`${base}posts/`}>Posts</a></li>
-              </ul>
-            </li>
-          </ul>
+          <nav class="menu menu--mobile" aria-label="Mobile navigation">
+            <button class="menu__trigger" type="button" aria-expanded="false" aria-controls="mobile-navigation">Menu ▾</button>
+            <ul id="mobile-navigation" class="menu__dropdown">
+              <li><a href={`${base}about/`}>About me</a></li>
+              <li><a href={`${base}projects/`}>Projects</a></li>
+              <li><a href={`${base}labs/`}>Labs</a></li>
+              <li><a href={`${base}posts/`}>Posts</a></li>
+            </ul>
+          </nav>
         </div>
         
-        <nav class="navigation-menu">
+        <nav class="navigation-menu" aria-label="Main navigation">
           <ul class="navigation-menu__inner menu--desktop">
+            <li><a href={`${base}projects/`}>Projects</a></li>
             <li><a href={`${base}about/`}>About me</a></li>
             <li><a href={`${base}labs/`}>Labs</a></li>
             <li><a href={`${base}posts/`}>Posts</a></li>
@@ -69,16 +73,16 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
         </nav>
       </header>
       
-      <main class="content">
+      <main id="main-content" class="content" tabindex="-1">
         <slot />
       </main>
       
       <footer class="footer">
         <div class="footer__inner">
           <div class="copyright">
-            <span>© 2025 Powered by <a href="https://astro.build">Astro</a></span>
+            <span>© {new Date().getFullYear()} d4str3k · Powered by <a href="https://astro.build">Astro</a></span>
             <span class="separator">::</span>
-            <span>Theme made by <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">panr</a></span>
+            <span>Theme made by <a href="https://github.com/panr/hugo-theme-terminal" target="_blank" rel="noopener noreferrer">panr</a></span>
             <span class="separator">::</span>
             <span>Ported by <a href="https://github.com/dennisklappe">Dennis Klappe</a></span>
           </div>
@@ -87,55 +91,29 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     </div>
     
     <script>
-      // Menu functionality
-      (() => {
-        const container = document.querySelector(".container");
-        const menus = document.querySelectorAll(".menu");
-        
-        // Close menus when clicking outside
-        document.body.addEventListener("click", () => {
-          menus.forEach(menu => {
-            if (menu.classList.contains("open")) {
-              menu.classList.remove("open");
-            }
-          });
+      const menu = document.querySelector<HTMLElement>('.menu--mobile');
+      const trigger = menu?.querySelector<HTMLButtonElement>('.menu__trigger');
+      if (menu && trigger) {
+        const setOpen = (open: boolean) => {
+          menu.classList.toggle('open', open);
+          trigger.setAttribute('aria-expanded', String(open));
+        };
+        trigger.addEventListener('click', () => setOpen(trigger.getAttribute('aria-expanded') !== 'true'));
+        document.addEventListener('click', (event) => {
+          if (event.target instanceof Node && !menu.contains(event.target)) setOpen(false);
         });
-        
-        // Close menus on window resize
-        window.addEventListener("resize", () => {
-          menus.forEach(menu => {
-            menu.classList.remove("open");
-          });
-        });
-        
-        // Menu trigger functionality
-        menus.forEach(menu => {
-          const trigger = menu.querySelector(".menu__trigger");
-          const dropdown = menu.querySelector(".menu__dropdown");
-          
-          if (trigger && dropdown) {
-            trigger.addEventListener("click", event => {
-              event.stopPropagation();
-              
-              if (menu.classList.contains("open")) {
-                menu.classList.remove("open");
-              } else {
-                // Close other menus
-                menus.forEach(m => m.classList.remove("open"));
-                menu.classList.add("open");
-              }
-              
-              // Adjust dropdown position if it goes outside container
-              if (dropdown.getBoundingClientRect().right > container.getBoundingClientRect().right) {
-                dropdown.style.left = "auto";
-                dropdown.style.right = "0";
-              }
-            });
-            
-            dropdown.addEventListener("click", e => e.stopPropagation());
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && trigger.getAttribute('aria-expanded') === 'true') {
+            setOpen(false);
+            trigger.focus();
           }
         });
-      })();
+        menu.addEventListener('focusout', (event) => {
+          if (!(event.relatedTarget instanceof Node) || !menu.contains(event.relatedTarget)) setOpen(false);
+        });
+        menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setOpen(false)));
+        window.addEventListener('resize', () => setOpen(false));
+      }
     </script>
   </body>
 </html>

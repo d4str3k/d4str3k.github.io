@@ -102,8 +102,10 @@
   color: var(--accent);
   border: 2px solid;
   margin-left: 0;
-  height: 100%;
+  font-weight: 400;
+  line-height: inherit;
   padding: 3px 8px;
+  margin-top: 0;
   margin-bottom: 0 !important;
   position: relative;
   cursor: pointer;

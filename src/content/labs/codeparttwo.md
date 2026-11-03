@@ -1,32 +1,36 @@
 ---
 title: "CodePartTwo"
-summary: "HTB CodePartTwo Writeup"
+summary: "Análisis de código fuente, escape del sandbox de js2py y escalada mediante la configuración de npbackup-cli."
 pubDate: 2025-11-29
 draft: false
+difficulty: Easy
+difficultySource: https://www.hackthebox.com/machines/codeparttwo
+lang: es
+techniques: ["Source code review", "js2py sandbox escape", "Credential analysis", "Backup configuration abuse"]
 ---
 
-### 1. Análisis inicial
+## 1. Análisis inicial
 
 Al acceder a la aplicación web, observé que el enlace **Download App** proporciona acceso a toda la lógica de la aplicación, lo que facilita el análisis estático y dinámico del código fuente.
 
-![login_analysis]( /labs/codeparttwo/login_analysis.png )
+<img src="/labs/codeparttwo/login_analysis.png" alt="login analysis" width="742" height="210" loading="lazy" decoding="async" />
 
 El endpoint `/login` revela que las contraseñas de los usuarios se almacenan en formato **MD5** dentro de la base de datos, lo que representa una debilidad criptográfica conocida.
 
 Adicionalmente, se identifican las versiones de las librerías utilizadas por la aplicación:
 
-![requirements]( /labs/codeparttwo/requirements.png )
+<img src="/labs/codeparttwo/requirements.png" alt="requirements" width="401" height="126" loading="lazy" decoding="async" />
 
-### 2. Identificación de vulnerabilidades
+## 2. Identificación de vulnerabilidades
 
 La aplicación utiliza la librería **js2py** en una versión vulnerable. Tras investigar, localicé la vulnerabilidad [CVE-2024-28397](https://github.com/Marven11/CVE-2024-28397-js2py-Sandbox-Escape), que permite la ejecución remota de código (**RCE**) a través de la manipulación del entorno de ejecución de JavaScript.
 
-### 3. Explotación de la vulnerabilidad
+## 3. Explotación de la vulnerabilidad
 
 
 Para verificar la viabilidad del exploit, ejecuté el servicio localmente y probé el [payload](https://github.com/Marven11/CVE-2024-28397-js2py-Sandbox-Escape) recomendado por el analista que encontró la vulnerabilidad en esta librería:
 
-![achieving_rce]( /labs/codeparttwo/achieving_rce.png )
+<img src="/labs/codeparttwo/achieving_rce.png" alt="achieving rce" width="636" height="347" loading="lazy" decoding="async" />
 
 Posteriormente, modifiqué el script para obtener una **reverse shell** y acceder a la máquina comprometida:
 
@@ -97,31 +101,31 @@ if __name__ == "__main__":
     exploit()
 ```
 
-![reverse_shell]( /labs/codeparttwo/reverse_shell.png )
+<img src="/labs/codeparttwo/reverse_shell.png" alt="reverse shell" width="1463" height="116" loading="lazy" decoding="async" />
 
-### 4. Post-explotación
+## 4. Post-explotación
 
 Una vez obtenida la shell, procedí a analizar los archivos disponibles en la máquina. Localicé la base de datos **SQLite** que almacena las credenciales de los usuarios:
 
-![bd_analysis]( /labs/codeparttwo/bd_analysis.png )
+<img src="/labs/codeparttwo/bd_analysis.png" alt="bd analysis" width="991" height="503" loading="lazy" decoding="async" />
 
 Identifiqué al usuario **marco** y, dado que la contraseña estaba en MD5, realicé un ataque de fuerza bruta para obtenerla:
 
-![marco_passwd_cracked]( /labs/codeparttwo/marco_passwd_cracked.png )
+<img src="/labs/codeparttwo/marco_passwd_cracked.png" alt="marco passwd cracked" width="334" height="67" loading="lazy" decoding="async" />
 
 La contraseña obtenida permitió el acceso tanto a la aplicación como al servidor bajo el usuario **marco**:
 
-![marco_ssh_connection]( /labs/codeparttwo/marco_ssh_connection.png )
+<img src="/labs/codeparttwo/marco_ssh_connection.png" alt="marco ssh connection" width="966" height="546" loading="lazy" decoding="async" />
 
 Dentro del entorno de **marco**, encontré varios archivos de interés:
 
-![marco_personal_folder]( /labs/codeparttwo/marco_personal_folder.png )
+<img src="/labs/codeparttwo/marco_personal_folder.png" alt="marco personal folder" width="584" height="273" loading="lazy" decoding="async" />
 
 Además, observé que el usuario tenía permisos para ejecutar el comando **npbackup-cli** con privilegios elevados:
 
-![sudo_commands]( /labs/codeparttwo/sudo_commands.png )
+<img src="/labs/codeparttwo/sudo_commands.png" alt="sudo commands" width="952" height="99" loading="lazy" decoding="async" />
 
-### 5. Escalada de privilegios
+## 5. Escalada de privilegios
 
 Analizando la herramienta de copias de seguridad, descubrí que era posible modificar el archivo de configuración para ejecutar comandos arbitrarios como **root**. Aproveché el campo `pre_exec_commands` para extraer la clave privada SSH del usuario **root**:
 
@@ -129,7 +133,7 @@ Analizando la herramienta de copias de seguridad, descubrí que era posible modi
 
 Utilizando esta clave privada, accedí como **root** y pude explorar el directorio personal, obteniendo finalmente la **flag** de la máquina:
 
-![root_ssh_connection]( /labs/codeparttwo/root_ssh_connection.png )
+<img src="/labs/codeparttwo/root_ssh_connection.png" alt="root ssh connection" width="961" height="580" loading="lazy" decoding="async" />
 
 ---
 

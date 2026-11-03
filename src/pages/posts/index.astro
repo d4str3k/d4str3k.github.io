@@ -8,13 +8,13 @@ const posts = (await getCollection('posts'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<BaseLayout title="Posts">
+<BaseLayout title="Posts - d4str3k" description="Updates on my security projects, conference presentations and journey into cybersecurity.">
   <div class="posts">
     <h1 class="posts-title">Posts</h1>
     {posts.length === 0 ? (
       <p>No posts yet. Check back soon!</p>
     ) : (
-      posts.map((post) => <PostCard post={post} />)
+      posts.map((post) => <PostCard post={{ slug: post.id, data: post.data }} />)
     )}
   </div>
 </BaseLayout>

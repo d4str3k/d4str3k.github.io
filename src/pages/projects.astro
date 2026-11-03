@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Projects - d4str3k" description="Security training projects developed by d4str3k, including VulnZoo, a platform for learning product security testing.">
+  <section class="framed">
+    <h1>Security projects</h1>
+    <p>I build vulnerable training environments to help people practise product security testing.</p>
+  </section>
+  <article class="post">
+    <h2>VulnZoo</h2>
+    <p>A vulnerable training platform I have been developing at DEKRA to help newcomers get started with product security testing.</p>
+    <p>I presented the project at Black Hat USA 2026 in Las Vegas. It brings together my interest in vulnerability research and practical security education.</p>
+    <div class="action-links">
+      <a class="button inline" href="https://github.com/DEKRA-Cybersecurity/VulnZoo">Explore VulnZoo on GitHub →</a>
+      <a href={`${base}posts/vulnzoo/`}>Read about the presentation →</a>
+    </div>
+  </article>
+  <article class="post">
+    <h2>VulnMNO</h2>
+    <p>I have also worked on the development of VulnMNO, a vulnerable training platform. Learn more about my background and technical interests on my profile.</p>
+    <a href={`${base}about/`}>About my work →</a>
+  </article>
+</BaseLayout>

@@ -1,7 +1,7 @@
 <svg width="800" height="450" xmlns="http://www.w3.org/2000/svg">
-  <rect width="800" height="450" fill="#1a170f"/>
+  <rect width="800" height="450" fill="#1d2021"/>
   <text x="400" y="225" text-anchor="middle" dominant-baseline="central" 
-        font-family="Fira Code, monospace" font-size="48" fill="#eec35e">
+        font-family="Fira Code, monospace" font-size="48" fill="#7abc62">
     Hello Friend
   </text>
 </svg>

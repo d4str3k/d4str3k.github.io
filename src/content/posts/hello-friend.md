@@ -3,7 +3,9 @@ title: 'Hello Friend'
 description: 'How I started my journey in cybersecurity, after falling in love with the story Elliot tells in Mr. Robot.'
 pubDate: 2025-11-28
 author: 'd4str3k'
-image: 'https://panr.github.io/hugo-theme-terminal-demo/posts/hello/cover.jpg'
+image: '/cover.png'
+imageWidth: 800
+imageHeight: 450
 tags: []
 ---
 

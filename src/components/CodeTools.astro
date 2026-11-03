@@ -1,0 +1,34 @@
+<script>
+  document.querySelectorAll<HTMLPreElement>('pre.astro-code').forEach(block => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'highlight';
+    block.before(wrapper);
+    wrapper.append(block);
+    const toolbar = document.createElement('div');
+    toolbar.className = 'code-title';
+    toolbar.textContent = block.getAttribute('data-language') || 'Code';
+    if (navigator.clipboard) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'copy-button';
+      button.textContent = 'Copy';
+      button.setAttribute('aria-label', 'Copy code to clipboard');
+      const status = document.createElement('span');
+      status.className = 'sr-only';
+      status.setAttribute('role', 'status');
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(block.textContent || '');
+          status.textContent = 'Code copied to clipboard';
+          button.textContent = 'Copied';
+        } catch {
+          status.textContent = 'Copy failed. Select and copy the code manually.';
+          button.textContent = 'Try again';
+        }
+        window.setTimeout(() => { button.textContent = 'Copy'; status.textContent = ''; }, 2000);
+      });
+      toolbar.append(status, button);
+    }
+    wrapper.prepend(toolbar);
+  });
+</script>

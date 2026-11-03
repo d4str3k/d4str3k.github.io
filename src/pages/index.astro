@@ -17,20 +17,34 @@ const labs = (await getCollection('labs'))
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 ---
 
-<BaseLayout title="d4str3k - Portfolio" description="Portfolio of d4str3k, showcasing projects and links to professional profiles.">
-  <div class="index-content framed">
-    <h1 id="hello-there">Welcome to my portfolio</h1>
-    <p>Here you will find a collection of my projects as well as links to my profiles intended to showcase my work.</p>
-    <p>
-      You can find my projects <a href="https://d4str3k.github.io/projects/">here.</a>
-    </p>
-  </div>
-  
+<BaseLayout title="d4str3k - Cybersecurity Evaluator & Security Researcher" description="Product security, Android, IoT and embedded security research by d4str3k. Explore security training projects and practical pentesting write-ups.">
+  <section class="index-content framed">
+    <p class="eyebrow">d4str3k · Product security</p>
+    <h1>Cybersecurity Evaluator &amp; Security Researcher</h1>
+    <p>I evaluate the security of commercial products and research vulnerabilities across Android, IoT, embedded systems and Web/API environments.</p>
+    <p>I also build vulnerable training platforms to help others get started with practical security testing.</p>
+    <div class="action-links">
+      <a class="button inline" href={`${base}projects/`}>Explore my projects →</a>
+      <a href="https://github.com/d4str3k">GitHub →</a>
+      <a href="https://www.linkedin.com/in/maximo-garcia-aroca/">Contact on LinkedIn →</a>
+    </div>
+  </section>
+
+  <section class="featured-project" aria-labelledby="featured-project-title">
+    <p class="eyebrow">Featured project</p>
+    <h2 id="featured-project-title">VulnZoo</h2>
+    <p>A vulnerable training platform I have been developing at DEKRA to make product security testing more approachable. Presented at Black Hat USA 2026.</p>
+    <div class="action-links">
+      <a class="button inline" href="https://github.com/DEKRA-Cybersecurity/VulnZoo">Explore the repository →</a>
+      <a href={`${base}posts/vulnzoo/`}>Read the story →</a>
+    </div>
+  </section>
+
   <div class="latest-labs">
     <h2 class="section-title">Latest Labs</h2>
     <div class="labs-list">
       {labs.map((lab) => {
-        const slug = lab.id.replace(/^labs\//, '').replace(/\.md$/, '');
+        const slug = lab.id;
         return <LabCard lab={{ slug, data: lab.data }} />;
       })}
     </div>
@@ -40,7 +54,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
   <div class="latest-posts">
     <h2 class="section-title">Latest Posts</h2>
     <div class="posts-list">
-      {posts.map((post) => <PostCard post={post} />)}
+      {posts.map((post) => <PostCard post={{ slug: post.id, data: post.data }} />)}
     </div>
     <a href={`${base}posts/`} class="view-all-link">View all posts →</a>
   </div>
