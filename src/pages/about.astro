@@ -30,7 +30,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         GitHub
       </a>
       <span class="profile-link tryhackme">
-        <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=216822" title="d4str3k on TryHackMe" loading="lazy"></iframe>
+        <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=216822" title="d4str3k on TryHackMe" width="329" height="88" loading="lazy"></iframe>
       </span>
     </div>
 
@@ -49,6 +49,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </object>
   </div>
 </BaseLayout>
+
+<script>
+  const badge = document.querySelector<HTMLElement>('.tryhackme');
+  if (badge) {
+    // TryHackMe serves a fixed 329 × 88 document. Scale the entire frame,
+    // rather than narrowing its viewport and clipping the badge on mobile.
+    const resizeBadge = () => badge.style.setProperty('--badge-scale', String(badge.clientWidth / 329));
+    resizeBadge();
+    new ResizeObserver(resizeBadge).observe(badge);
+  }
+</script>
 
 <style>
   .page {
@@ -101,18 +112,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
   .profile-link.tryhackme {
     padding: 0;
-    width: min(350px, 100%);
+    position: relative;
+    width: min(329px, 100%);
+    aspect-ratio: 329 / 88;
+    overflow: hidden;
     background: none;
     display: flex;
     align-items: center;
   }
   .profile-link.tryhackme iframe {
-    vertical-align: middle;
-    width: 100%;
-    max-width: 350px;
-    height: 80px;
+    position: absolute;
+    inset: 0;
+    width: 329px;
+    height: 88px;
+    transform: scale(var(--badge-scale, 1));
+    transform-origin: top left;
     border: none;
-    overflow: visible;
     display: block;
   }
   .cv-actions {
